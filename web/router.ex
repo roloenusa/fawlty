@@ -8,8 +8,8 @@ defmodule Fawlty.Router do
 
     # get "/", Fawlty.PageController, :index, as: :pages
 
-    get "/", RealTimeToDo.ToDosController, :index, as: :root
-    channel "to_dos", RealTimeToDo.ToDoChannel
+    get "/", Fawlty.ToDosController, :index, as: :root
+    channel "to_dos", Fawlty.ToDoChannel
   end
 
   # Other scopes may use custom stacks.
