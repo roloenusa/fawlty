@@ -9,6 +9,7 @@ defmodule Fawlty do
     children = [
       # Define workers and child supervisors to be supervised
       # worker(Fawlty.Worker, [arg1, arg2, arg3])
+      worker(Fawlty.Repo, [])
     ]
 
     # See http://elixir-lang.org/docs/stable/elixir/Supervisor.html
