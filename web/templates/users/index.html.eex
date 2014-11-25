@@ -1,0 +1,24 @@
+<form action="<%= users_path(:create) %>" method="post">
+  Name:<br />
+  <input type="text" name="name">
+  <br />
+  Email:<br />
+  <input type="text" name="email">
+  <br />
+  <input type="submit" value="Create User">
+</form>
+
+<div id='to_do_list_container'>
+  <h3>
+    Users
+    <span class='arrange-items' for="#users">Arrange users<span>
+  </h3>
+  <ul id='user_list'>
+    <%= for user <- @users do %>
+      <%= render "user.html", user: user %>
+    <% end %>
+  </ul>
+</div>
+
+<script language='javascript'>
+</script>

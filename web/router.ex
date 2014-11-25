@@ -10,6 +10,8 @@ defmodule Fawlty.Router do
 
     get "/", Fawlty.ToDosController, :index, as: :root
     channel "to_dos", Fawlty.ToDoChannel
+
+    resources "/users", Fawlty.UsersController
   end
 
   # Other scopes may use custom stacks.
