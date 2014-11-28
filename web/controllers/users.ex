@@ -11,6 +11,15 @@ defmodule Fawlty.UsersController do
   end
 
   def create(conn, params) do
+
+    user = Map.merge(%User{}, Fawlty.Util.atomize_keys(params))
+    case User.validate(user) do
+      [] ->
+        Repo.insert(user)
+      _ ->
+        nil
+    end
+
     redirect conn, Fawlty.Router.Helpers.users_path(:index)
   end
 end

@@ -41,7 +41,7 @@ defmodule Fawlty.ToDoChannel do
   end
 
   defp create_item(params) do
-    item = Map.merge(%Item{done: false}, atomize_keys(params))
+    item = Map.merge(%Item{done: false}, Fawlty.Util.atomize_keys(params))
     case Item.validate(item) do
       [] ->
         Repo.insert(item)
@@ -79,7 +79,7 @@ defmodule Fawlty.ToDoChannel do
   defp update_item(item_id, params) do
     case Repo.get(Item, String.to_integer(item_id)) do
       item when is_map(item) ->
-        atomized_keys_params = atomize_keys(params)
+        atomized_keys_params = Fawlty.Util.atomize_keys(params)
         item = Map.merge(item, atomized_keys_params)
         case Item.validate(item) do
           [] ->
@@ -101,9 +101,5 @@ defmodule Fawlty.ToDoChannel do
       _ ->
         nil
     end
-  end
-
-  defp atomize_keys(struct) do
-    Enum.reduce struct, %{}, fn({k, v}, map) -> Map.put(map, String.to_atom(k), v) end
   end
 end

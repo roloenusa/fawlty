@@ -1,6 +1,9 @@
 defmodule User do
   use Ecto.Model
 
+  validate user, name: present()
+  validate user, email: present()
+
   # weather is the DB table
   schema "users" do
     field :name, :string

@@ -1,4 +1,5 @@
 <li data-id='<%= @user.id %>'>
+  <span class='item-description'><%= @user.id %></span>
   <span class='item-description'><%= @user.name %></span>
   <span class='item-description'><%= @user.email %></span>
 </li>
