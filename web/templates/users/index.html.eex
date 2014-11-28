@@ -1,11 +1,14 @@
 <form action="<%= users_path(:create) %>" method="post">
   Name:<br />
-  <input type="text" name="name">
+  <input type="text" name="name" />
   <br />
   Email:<br />
-  <input type="text" name="email">
+  <input type="text" name="email" />
   <br />
-  <input type="submit" value="Create User">
+  Tag:<br />
+  <input type="text" name="tag" />
+  <br />
+  <input type="submit" value="Create User" />
 </form>
 
 <div id='to_do_list_container'>
