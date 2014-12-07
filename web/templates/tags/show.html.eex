@@ -1,0 +1,9 @@
+<div>
+  <h3>
+    Show <%= @tag %>
+  </h3>
+
+  <%= for item <- @items do %>
+    <%= render Fawlty.ToDosView, "item.html", item: item %>
+  <% end %>
+</div>
