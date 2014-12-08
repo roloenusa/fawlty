@@ -1,18 +1,11 @@
 defmodule Fawlty.ToDosController do
   use Phoenix.Controller
-  alias Fawlty.Repo
-  import Ecto.Query
-
+  
   plug :action
 
   def index(conn, _params) do
-    to_do_items = Repo.all(Item
-                            |> where([item], item.done == false)
-                            |> order_by([item], asc: item.position))
-
-    done_items = Repo.all(Item
-                            |> where([item], item.done == true)
-                            |> order_by([item], asc: item.position))
+    to_do_items = Item.find_all_pending
+    done_items = Item.find_all_completed
 
     render conn, "index", to_do_items: to_do_items, done_items: done_items
   end

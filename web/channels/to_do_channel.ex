@@ -42,12 +42,7 @@ defmodule Fawlty.ToDoChannel do
 
   defp create_item(params) do
     item = Map.merge(%Item{done: false}, Fawlty.Util.atomize_keys(params))
-    case Item.validate(item) do
-      [] ->
-        Repo.insert(item)
-      _ ->
-        nil
-    end
+    Item.create_item(item)
   end
 
   defp update_positions(item_ids) do
@@ -93,13 +88,8 @@ defmodule Fawlty.ToDoChannel do
     end
   end
 
-  def delete_item(item_id) do
-    case Repo.get(Item, String.to_integer(item_id)) do
-      item when is_map(item) ->
-        Repo.delete(item)
-        item
-      _ ->
-        nil
-    end
+  defp delete_item(item_id) do
+    String.to_integer(item_id)
+      |> Item.delete_item
   end
 end
