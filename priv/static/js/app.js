@@ -108,7 +108,7 @@ var ToDoApp = {
         fromItemList = app.toDoList;
       }
 
-      fromItemList.find("#item_" + item.id).parent().fadeOut(function() {
+      fromItemList.find("#row_" + item.id).fadeOut(function() {
         targetItemList.prepend($(this).fadeIn());
       });
     });
@@ -119,7 +119,7 @@ var ToDoApp = {
     app.toDoListContainer.delegate("span.edit-item-description input", "keypress", function(e) {
       if(e.keyCode == 13) {
         var newDescription = $(this).val();
-        var itemContainer = $(this).parents("li:first");
+        var itemContainer = $(this).parents("div:first");
         var itemDescription = itemContainer.find("span.item-description");
         var itemCheckBox = itemContainer.find("input.item-done");
         var editItemLink = itemContainer.find("span.edit-item");
@@ -138,15 +138,15 @@ var ToDoApp = {
 
   bindEventsForEditingItem: function() {
     this.toDoListContainer.delegate("span.edit-item", "click", function(e) {
-      var itemContainer = $(this).parent();
+      var itemContainer = $(this).parent().parent();
       var itemDescription = itemContainer.find("span.item-description");
       var editItemDescription = itemContainer.find("span.edit-item-description");
       itemDescription.toggleClass("hidden");
       editItemDescription.toggleClass("hidden").find("input").val(itemDescription.html()).focus();
       if($(this).hasClass("cancel-edit-item")) {
-        $(this).html("edit");
+        $(this).toggleClass("btn-danger");
       } else {
-        $(this).html("cancel");
+        $(this).toggleClass("btn-danger");
       }//end else
       $(this).toggleClass("cancel-edit-item");
     });
@@ -164,7 +164,8 @@ var ToDoApp = {
   bindEventsForDeletingItem: function(channel) {
     var app = this;
     app.toDoListContainer.delegate("span.delete-item", "click", function(e) {
-      var parent = $(this).parent();
+      console.log(this);
+      var parent = $(this).parent().parent().parent();
       parent.fadeOut(function() {
         $(this).remove();
         var itemCheckBox = parent.find("input.item-done");

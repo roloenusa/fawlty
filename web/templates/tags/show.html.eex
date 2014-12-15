@@ -1,7 +1,10 @@
 <div>
   <h3>
+    <span class="fa fa-tag"></span>
     Show <%= @tag %>
   </h3>
+
+  <hr />
 
   <%= for item <- @items do %>
     <%= render Fawlty.ToDosView, "item.html", item: item %>
