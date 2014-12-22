@@ -36,14 +36,7 @@ defmodule Tag do
   end
 
   defp safe_insert(%Tag{} = tag, _), do: tag
-  defp safe_insert(nil, tag) do
-    case Tag.validate(tag) do
-      [] ->
-        Repo.insert(tag)
-      _ ->
-        nil
-    end
-  end
+  defp safe_insert(nil, tag), do: Repo.create(tag)
 
   def find_by_tag(word) do
     Tag

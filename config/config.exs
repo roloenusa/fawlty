@@ -6,7 +6,7 @@
 use Mix.Config
 
 # Configures the router
-config :phoenix, Fawlty.Router,
+config :fawlty, Fawlty.Endpoint,
   url: [host: "localhost"],
   http: [port: System.get_env("PORT")],
   https: false,
@@ -16,7 +16,7 @@ config :phoenix, Fawlty.Router,
   error_controller: Fawlty.PageController
 
 # Session configuration
-config :phoenix, Fawlty.Router,
+config :fawlty, Fawlty.Endpoint,
   session: [store: :cookie,
             key: "_fawlty_key"]
 
@@ -24,6 +24,17 @@ config :phoenix, Fawlty.Router,
 config :logger, :console,
   format: "$time $metadata[$level] $message\n",
   metadata: [:request_id]
+
+config :fawlty, :oauth2ex,
+  id:            "168368212731-fpsh5ligrar2ehaa25gv2m96rjfl5n7d.apps.googleusercontent.com",
+  secret:        "uHPkabB3T4z0hCF2uPPZPzDJ",
+  authorize_url: "https://accounts.google.com/o/oauth2/auth",
+  token_url:     "https://accounts.google.com/o/oauth2/token",
+  scope:         "https://www.googleapis.com/auth/userinfo.email",
+  callback_url:  "http://localhost:4000/sessions/oauth2callback"
+
+config :fawlty, :google,
+  email_url: "https://www.googleapis.com/oauth2/v2/userinfo"
 
 # Import environment specific config. This must remain at the bottom
 # of this file so it overrides the configuration defined above.

@@ -18,15 +18,8 @@ defmodule Item do
   """
   @spec create_item(Item) :: Item | nil
   def create_item(item) do
-    do_create_item(item)
+    Repo.create(item)
       |> after_item_save
-  end
-
-  defp do_create_item(item) do
-    case Item.validate(item) do
-      [] -> Repo.insert(item)
-      _  -> nil
-    end
   end
 
   defp after_item_save(nil), do: nil
@@ -34,7 +27,6 @@ defmodule Item do
     Tag.process_tags(description, id)
     item
   end
-
 
   @doc """
   Delete an item and the related associations by the item_id.

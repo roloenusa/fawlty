@@ -15,16 +15,25 @@ defmodule Fawlty.Mixfile do
   # Type `mix help compile.app` for more information
   def application do
     [mod: {Fawlty, []},
-     applications: [:phoenix, :cowboy, :logger, :ecto, :postgrex]]
+     applications: [
+       :phoenix,
+       :cowboy,
+       :logger,
+       :ecto,
+       :postgrex,
+       :oauth2ex
+    ]]
   end
 
   # Specifies your project dependencies
   #
   # Type `mix help deps` for examples and options
   defp deps do
-    [{:phoenix, "0.5.0"},
-     {:cowboy, "~> 1.0"},
-     {:ecto, "~> 0.2.0"},
-     {:postgrex, "~> 0.6.0"}]
+    [{ :phoenix, "~> 0.7"},
+     { :cowboy, "~> 1.0"},
+     { :ecto, "~> 0.2.0"},
+     { :postgrex, "~> 0.6.0"},
+     { :oauth2ex, github: "parroty/oauth2ex"}
+    ]
   end
 end

@@ -1,3 +1,3 @@
 defmodule Fawlty.UsersView do
-  use Fawlty.Views
+  use Fawlty.View
 end

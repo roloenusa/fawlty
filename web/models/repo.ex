@@ -12,7 +12,7 @@ defmodule Fawlty.Repo do
 
   def find_single(query) do
     query
-      |> limit(1)
+      |> limit([q], 1)
       |> all
       |> do_find_single
   end
@@ -20,4 +20,13 @@ defmodule Fawlty.Repo do
   defp do_find_single([]), do: nil
   defp do_find_single([m | []]), do: m
   defp do_find_single(_), do: raise "Not a single record"
+
+  def create(record) do
+    case apply(record.__struct__, :validate, [record]) do
+      nil ->
+        {:ok, insert(record)}
+      errors ->
+        {:error, errors}
+    end
+  end
 end

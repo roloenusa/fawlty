@@ -33,14 +33,7 @@ defmodule ItemTagMap do
   end
 
   defp safe_insert(%ItemTagMap{} = map, _), do: map
-  defp safe_insert(nil, map) do
-    case __MODULE__.validate(map) do
-      [] ->
-        Repo.insert(map)
-      _ ->
-        nil
-    end
-  end
+  defp safe_insert(nil, map), do: Repo.create(map)
 
   def find_by_tag_id_and_item_id(tag_id, item_id) do
     ItemTagMap

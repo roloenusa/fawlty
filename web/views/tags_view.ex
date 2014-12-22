@@ -1,3 +1,3 @@
 defmodule Fawlty.TagsView do
-  use Fawlty.Views
+  use Fawlty.View
 end
