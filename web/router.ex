@@ -16,7 +16,11 @@ defmodule Fawlty.Router do
     get "/", Fawlty.PageController, :index, as: :pages
     get "/", Fawlty.ToDosController, :index, as: :root
 
-    resources "/users", Fawlty.UsersController
+
+    # scope "/users" do
+      get "/users/profile", Fawlty.UsersController, :profile
+      resources "users", Fawlty.UsersController
+    # end
 
     scope "/items", as: :items do
       get "/tags/:word", Fawlty.TagsController, :show

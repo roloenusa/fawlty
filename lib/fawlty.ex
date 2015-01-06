@@ -6,6 +6,9 @@ defmodule Fawlty do
   def start(_type, _args) do
     import Supervisor.Spec, warn: false
 
+    Application.start(:bcrypt)
+    Application.start(:erlpass)
+
     children = [
       # Define workers and child supervisors to be supervised
       # worker(Fawlty.Worker, [arg1, arg2, arg3])

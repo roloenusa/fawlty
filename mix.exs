@@ -33,7 +33,9 @@ defmodule Fawlty.Mixfile do
      { :cowboy, "~> 1.0"},
      { :ecto, "~> 0.2.0"},
      { :postgrex, "~> 0.6.0"},
-     { :oauth2ex, github: "parroty/oauth2ex"}
+     { :oauth2ex, github: "parroty/oauth2ex"},
+     { :erlpass, github: "ferd/erlpass"}
+
     ]
   end
 end

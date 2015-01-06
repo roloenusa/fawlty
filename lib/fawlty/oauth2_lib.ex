@@ -35,86 +35,20 @@ defmodule Fawlty.Oauth2Lib do
 
     try do
       token = OAuth2Ex.get_token(config, code)
-      response = OAuth2Ex.HTTP.get(token, google_url(:email_url))
-      check_user_info(response.body)
-      |> validate_session(conn, token, response.body)
+      %HTTPoison.Response{body: body} = response = OAuth2Ex.HTTP.get(token, google_url(:email_url))
+      {:ok, conn, token, body}
     rescue
       OAuth2Ex.Error -> {:error, conn}
     end
   end
 
-  @spec check_user_info(info) :: boolean
-  defp check_user_info(%{"email" => email}) do
-    Regex.match?(~r/@/, email)
-  end
-
-  @spec validate_session(boolean, conn, token, info) :: {:ok | :error, conn}
-  defp validate_session(false, conn, _token, _info), do: {:error, conn}
-  defp validate_session(true, conn, token, info) do
-    {:ok, save_session(conn, token, info)}
-  end
-
-  ####
-  # Sign out
-
-  @doc """
-  Delete the session information from a connection
-  """
-  @spec sign_out(conn) :: conn
-  def sign_out(conn) do
-    conn
-    |> Conn.delete_session(@user_info_key)
-    |> Conn.delete_session(@session_key)
-  end
-
-  ####
-  # Session information
-
-  @doc """
-  Retrieve all the user information stored for the session.
-  """
-  @spec get_user_info(conn) :: conn
-  def get_user_info(conn) do
-    Conn.get_session(conn, @user_info_key)
-  end
-
-  ####
-  # Authentication
-
-  @doc """
-  Execute any authentication on the user connection.
-  """
-  @spec authenticate(conn) :: {:ok | :error, conn}
-  def authenticate(conn) do
-    check_session(conn)
-  end
-
-  @spec check_session(conn) :: {:ok | :error, conn}
-  defp check_session(conn) do
-    case Conn.get_session(conn, @session_key) do
-      nil   -> {:error, conn}
-      token -> check_valid_token(conn, token)
-    end
-  end
-
-  @spec save_session(conn, token, info) :: conn
-  defp save_session(conn, token, info) do
-    user = Devise.init_session(info, token)
-
-    conn
-    |> Conn.put_session(@session_key, token)
-    |> Conn.put_session(@user_info_key, info)
-  end
-
-  @spec check_valid_token(conn, token) :: {:ok | :error, conn}
-  defp check_valid_token(conn, token) do
+  @spec check_valid_token(token) :: {:ok, token} | {:error, atom}
+  def check_valid_token(token) do
     try do
       token = OAuth2Ex.ensure_token(config, token)
-      info = get_user_info(conn)
-      conn = save_session(conn, token, info)
-      {:ok, conn}
+      {:ok, token}
     rescue
-      OAuth2Ex.Error -> {:error, conn}
+      OAuth2Ex.Error -> {:error, :invalid}
     end
   end
 

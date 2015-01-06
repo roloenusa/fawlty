@@ -17,4 +17,11 @@ defmodule Fawlty.View do
   end
 
   # Functions defined here are available to all other views/templates
+  def user_session(conn) do
+    Fawlty.Devise.get_session(conn)
+  end
+
+  def debug(conn) do
+    "#{inspect Fawlty.Devise.get_session(conn)}"
+  end
 end

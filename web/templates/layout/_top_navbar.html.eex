@@ -1,0 +1,7 @@
+<ul class="nav navbar-nav navbar-right">
+  <li>
+    <a class="dropdown-toggle" role="button" href="/sessions/google_oauth2">
+      <i class="glyphicon glyphicon-user"></i> Sign In</span>
+    </a>
+  </li>
+</ul>

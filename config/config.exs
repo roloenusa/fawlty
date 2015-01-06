@@ -26,8 +26,8 @@ config :logger, :console,
   metadata: [:request_id]
 
 config :fawlty, :oauth2ex,
-  id:            "168368212731-fpsh5ligrar2ehaa25gv2m96rjfl5n7d.apps.googleusercontent.com",
-  secret:        "uHPkabB3T4z0hCF2uPPZPzDJ",
+  id:            "google id",
+  secret:        "google secret",
   authorize_url: "https://accounts.google.com/o/oauth2/auth",
   token_url:     "https://accounts.google.com/o/oauth2/token",
   scope:         "https://www.googleapis.com/auth/userinfo.email",

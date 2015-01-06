@@ -39,20 +39,12 @@
         <a class="navbar-brand" href="#">Control Panel</a>
       </div>
       <div class="navbar-collapse collapse">
-        <ul class="nav navbar-nav navbar-right">
-
-          <li class="dropdown">
-            <a class="dropdown-toggle" role="button" data-toggle="dropdown" href="#">
-              <i class="glyphicon glyphicon-user"></i> Admin <span class="caret"></span>
-            </a>
-            <ul id="g-account-menu" class="dropdown-menu" role="menu">
-              <li><a href="#">My Profile</a>
-              </li>
-              <li><a href="<%= Fawlty.Router.Helpers.sessions_path(:logout) %>"><i class="glyphicon glyphicon-lock"></i> Logout</a>
-              </li>
-            </ul>
-          </li>
-        </ul>
+        <%=
+          case Fawlty.Devise.get_session(@conn) do
+            nil  -> render "_top_navbar.html", []
+            user -> render "_top_navbar_user.html", [user: @user]
+          end
+        %>
       </div>
     </div>
     <!-- /container -->
@@ -125,8 +117,13 @@
   </div>
   <!-- /.modal -->
 
-
-
+  <%= if Mix.env == :dev do %>
+  <div class="container">
+    <hr />
+    <h4>Debug</h2>
+    <%= debug(@conn) %>
+  </div>
+  <% end %>
 
   <!-- script references -->
   <script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.2/jquery.min.js"></script>
