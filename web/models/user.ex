@@ -26,11 +26,9 @@ defmodule Fawlty.User do
   end
 
   def build(name, email, %{provider: provider}) do
-    IO.puts "building provider: #{inspect provider}"
     %Fawlty.User{name: name, email: email, provider: provider}
   end
   def build(name, email, opts) do
-    IO.puts "building -- #{inspect opts}"
     %Fawlty.User{name: name, email: email}
   end
 

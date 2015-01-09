@@ -16,14 +16,25 @@ defmodule Item do
   @doc """
   Create an item and execute any post saving hooks.
   """
-  @spec create_item(Item) :: Item | nil
   def create_item(item) do
     Repo.create(item)
       |> after_item_save
   end
 
+  @doc """
+  Update the item model including processing new tags.
+  """
+  def update(item_id, params) do
+    item = get(item_id)
+             |> Map.merge(params)
+             
+    res = Repo.update(item)
+    after_item_save({res, item})
+    item
+  end
+
   defp after_item_save(nil), do: nil
-  defp after_item_save(%Item{description: description, id: id} = item) do
+  defp after_item_save({:ok, %Item{description: description, id: id} = item}) do
     Tag.process_tags(description, id)
     item
   end
@@ -47,10 +58,7 @@ defmodule Item do
   """
   @spec get(pos_integer) :: Item | nil
   def get(item_id) do
-    Item
-      |> where([item], item.id == ^item_id)
-      |> find_query
-      |> Repo.find_single
+    Repo.get(Item, item_id)
   end
 
   @doc """

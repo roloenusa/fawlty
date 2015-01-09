@@ -10,7 +10,7 @@ defmodule Fawlty.ToDoChannel do
   def event(socket, "create:item", %{"item" => params}) do
     item = create_item(params)
     if item do
-      item_html = Phoenix.View.render Fawlty.ToDosView, "item.html", item: item
+      {:safe, item_html} = Phoenix.View.render Fawlty.ToDosView, "item.html", item: item
       broadcast socket, "create:item", %{item_html: item_html}
     end
     socket
@@ -72,20 +72,7 @@ defmodule Fawlty.ToDoChannel do
   end
 
   defp update_item(item_id, params) do
-    case Repo.get(Item, String.to_integer(item_id)) do
-      item when is_map(item) ->
-        atomized_keys_params = Fawlty.Util.atomize_keys(params)
-        item = Map.merge(item, atomized_keys_params)
-        case Item.validate(item) do
-          [] ->
-            Repo.update(item)
-            item
-          _ ->
-            nil
-        end
-      _ ->
-        nil
-    end
+    Item.update(String.to_integer(item_id), Fawlty.Util.atomize_keys(params))
   end
 
   defp delete_item(item_id) do

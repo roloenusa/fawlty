@@ -14,8 +14,6 @@ defmodule Fawlty.Router do
     pipe_through :browser
 
     get "/", Fawlty.PageController, :index, as: :pages
-    get "/", Fawlty.ToDosController, :index, as: :root
-
 
     # scope "/users" do
       get "/users/profile", Fawlty.UsersController, :profile
@@ -23,6 +21,7 @@ defmodule Fawlty.Router do
     # end
 
     scope "/items", as: :items do
+      get "/", Fawlty.ToDosController, :index, as: :root
       get "/tags/:word", Fawlty.TagsController, :show
     end
 

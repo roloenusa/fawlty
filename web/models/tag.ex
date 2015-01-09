@@ -14,7 +14,7 @@ defmodule Tag do
   def process_tags(description, item_id) do
     Fawlty.Util.parse_tags(description)
       |> Enum.map(fn(word) ->
-                     tag = safe_insert(%Tag{word: word})
+                     {:ok, tag} = safe_insert(%Tag{word: word})
                      process_tag_map(tag, item_id)
                      tag
                    end)
@@ -35,7 +35,7 @@ defmodule Tag do
       |> safe_insert(tag)
   end
 
-  defp safe_insert(%Tag{} = tag, _), do: tag
+  defp safe_insert(%Tag{} = tag, _), do: {:ok, tag}
   defp safe_insert(nil, tag), do: Repo.create(tag)
 
   def find_by_tag(word) do
