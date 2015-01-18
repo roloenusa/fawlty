@@ -3,7 +3,9 @@ defmodule Fawlty.Repo do
   import Ecto.Query
 
   def conf do
-    parse_url "ecto://fawlty:new_password@localhost/fawlty"
+    {:ok, url} = :application.get_env(:fawlty, :database_url)
+    
+    parse_url url
   end
 
   def priv do

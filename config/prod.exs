@@ -18,3 +18,11 @@ config :fawlty, Fawlty.Endpoint,
 
 config :logger, :console,
   level: :info
+
+config :fawlty,
+  database_url: System.get_env("DATABASE_URL")
+
+config :fawlty, :oauth2ex,
+  id:            System.get_env("GOOGLE_ID"),
+  secret:        System.get_env("GOOGLE_SECRET"),
+  callback_url:  "https://fawlty.herokuapp.com/sessions/oauth2callback"
