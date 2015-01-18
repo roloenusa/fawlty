@@ -31,7 +31,7 @@ config :fawlty, :oauth2ex,
   authorize_url: "https://accounts.google.com/o/oauth2/auth",
   token_url:     "https://accounts.google.com/o/oauth2/token",
   scope:         "https://www.googleapis.com/auth/userinfo.email",
-  callback_url:  "http://localhost:4000/sessions/oauth2callback"
+  callback_url:  "<pew>"
 
 config :fawlty, :google,
   email_url: "https://www.googleapis.com/oauth2/v2/userinfo"
