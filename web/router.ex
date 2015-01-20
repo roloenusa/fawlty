@@ -21,7 +21,7 @@ defmodule Fawlty.Router do
     # end
 
     scope "/items", as: :items do
-      get "/", Fawlty.ToDosController, :index, as: :root
+      get "/", Fawlty.ToDosController, :index
       get "/tags/:word", Fawlty.TagsController, :show
     end
 

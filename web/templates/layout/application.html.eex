@@ -63,6 +63,7 @@
 
         <ul class="nav nav-stacked">
           <li>
+            <a href="<%= Fawlty.Router.Helpers.items_to_dos_path(:index) %>"><i class="glyphicon glyphicon-leaf"></i> Items</a>
             <a href="javascript:;"><i class="glyphicon glyphicon-tag"></i> Tags</a>
           </li>
           </li>
