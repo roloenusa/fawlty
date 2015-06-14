@@ -8,6 +8,7 @@ defmodule Fawlty.Router do
   end
 
   channel "to_dos", Fawlty.ToDoChannel
+  channel "publica", Fawlty.PublicaChannel
 
   scope "/" do
     # Use the default browser stack.
@@ -17,6 +18,7 @@ defmodule Fawlty.Router do
 
     # scope "/users" do
       get "/users/profile", Fawlty.UsersController, :profile
+      get "/users/publica", Fawlty.UsersController, :publica
       resources "users", Fawlty.UsersController
     # end
 
@@ -30,8 +32,13 @@ defmodule Fawlty.Router do
     get "/sessions/logout", Fawlty.SessionsController, :logout, as: :sessions
   end
 
-  # Other scopes may use custom stacks.
-  # scope "/api" do
-  #   pipe_through :api
-  # end
+  pipeline :api do
+    plug :accepts, ["json"]
+  end
+
+  scope "/api", Fawlty do
+    pipe_through :api
+
+    get "/items", ToDosController, :items
+  end
 end

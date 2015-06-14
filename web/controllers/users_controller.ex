@@ -33,6 +33,10 @@ defmodule Fawlty.UsersController do
     redirect(conn, to: Fawlty.Router.Helpers.users_path(:profile))
   end
 
+  def publica(conn, params) do
+    render conn, :publica, scripts: ["hello", "world"]
+  end
+
   @spec authenticate(conn, :user) :: conn
   defp authenticate(conn, :user) do
     Fawlty.SessionsController.authenticated?(conn)

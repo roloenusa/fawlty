@@ -14,4 +14,8 @@ defmodule Fawlty.ToDosController do
   defp authenticate(conn, :user) do
     Fawlty.SessionsController.authenticated?(conn)
   end
+
+  def items(conn, _params) do
+    render conn, items: %{hola: "hello", mundo: "world"}
+  end
 end
