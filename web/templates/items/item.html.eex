@@ -11,7 +11,7 @@
 
     <div class="col-md-6 text-right">
       <%= for tag <- Fawlty.Util.parse_tags(@item.description) do %>
-      <a href="<%= Fawlty.Router.Helpers.items_tags_path(:show, tag) %>" class="btn"><%= tag %></a>
+      <a href="<%= Fawlty.Router.Helpers.tags_path(:show, tag) %>" class="btn"><%= tag %></a>
       <% end %>
 
       <span class='edit-item btn text-primary fa fa-edit'></span>

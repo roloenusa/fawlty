@@ -22,10 +22,8 @@ defmodule Fawlty.Router do
       resources "users", Fawlty.UsersController
     # end
 
-    scope "/items", as: :items do
-      get "/", Fawlty.ToDosController, :index
-      get "/tags/:word", Fawlty.TagsController, :show
-    end
+    resources "/items", Fawlty.ItemsController
+    resources "/tags", Fawlty.TagsController
 
     get "/sessions/google_oauth2", Fawlty.SessionsController, :google_oauth2, as: :sessions
     get "/sessions/oauth2callback", Fawlty.SessionsController, :oauth2callback, as: :sessions
@@ -39,6 +37,6 @@ defmodule Fawlty.Router do
   scope "/api", Fawlty do
     pipe_through :api
 
-    get "/items", ToDosController, :items
+    get "/items", ItemsController, :items
   end
 end

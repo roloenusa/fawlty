@@ -1,4 +1,4 @@
-defmodule Fawlty.ToDosController do
+defmodule Fawlty.ItemsController do
   use Phoenix.Controller
 
   plug :authenticate, :user when action in [:index]
