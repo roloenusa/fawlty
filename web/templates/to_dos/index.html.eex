@@ -10,7 +10,8 @@
 </div>
 
 
-<div class="row" id="to_do_list_container">
+<div class="row" id="to_do_list_container" ng-controller="ItemsCtrl">
+
   <div class="col-md-12">
     <h4>
       <span class="fa fa-th-list"></span>
@@ -19,10 +20,8 @@
     <hr />
   </div>
   <div class="col-md-12">
-    <div class="list-group todo-group" id="to_do_list">
-      <%= for item <- @to_do_items do %>
-      <%= render "item.html", item: item %>
-      <% end %>
+    <div class="list-group todo-group" id="to_do_list" ng-repeat="item in data.pending">
+      <%= render "item.html", [] %>
     </div>
   </div>
 
@@ -31,10 +30,8 @@
     <hr />
   </div>
   <div class="col-md-12">
-    <div class="list-group todo-group" id="done_list">
-      <%= for item <- @done_items do %>
-      <%= render "item.html", item: item %>
-      <% end %>
+    <div class="list-group todo-group" id="done_list" ng-repeat="item in data.done">
+      <%= render "item.html", [] %>
     </div>
   </div>
 </div>

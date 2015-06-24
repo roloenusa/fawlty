@@ -1,19 +1,16 @@
-<div data-id='<%= @item.id %>' class="list-group-item todo-item" id="row_<%= @item.id %>">
+<div>
   <div class="row" >
 
     <div class="col-md-6">
       <label>
-        <input type='checkbox' id='item_<%= @item.id %>' class='item-done' <%= if @item.done, do: "checked" %> />
-        <span class='item-description'><%= @item.description %></span>
+        <input type='checkbox' id='{{item.id}}' class='item-done' />
+        <span class='item-description'>{{item.description}}</span>
         <span class='edit-item-description hidden'><input type='text' /></span>
       </label>
     </div>
 
     <div class="col-md-6 text-right">
-      <%= for tag <- Fawlty.Util.parse_tags(@item.description) do %>
-      <a href="<%= Fawlty.Router.Helpers.items_tags_path(:show, tag) %>" class="btn"><%= tag %></a>
-      <% end %>
-
+      <a href="" class="btn">tag</a>
       <span class='edit-item btn text-primary fa fa-edit'></span>
       <span class="delete-item btn text-danger fa fa-trash-o"></span>
     </div>
