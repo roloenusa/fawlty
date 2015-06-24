@@ -10,6 +10,7 @@ defmodule Fawlty.UserHandler do
 
   Record.defrecordp :worker_state, [
                                      oauth: nil,
+                                     user: nil
                                    ]
 
   def start() do
@@ -19,10 +20,9 @@ defmodule Fawlty.UserHandler do
   @doc """
   Starts a dispatcher linked to the calling process application supervisor
   """
-  @spec start_link() :: {:ok, pid}
-  def start_link() do
-    IO.puts "startlink"
-    :gen_server.start_link(__MODULE__, [], [])
+  # @spec start_link(term) :: {:ok, pid}
+  def start_link(args) do
+    :gen_server.start_link(__MODULE__, args, [])
   end
 
   @doc """
@@ -37,13 +37,13 @@ defmodule Fawlty.UserHandler do
   # GenServer Implementation
   #####
 
-  def init(_args) do
-    worker_state = handle_init
+  def init({email, token}) do
+    worker_state = handle_init(email, token)
     {:ok, worker_state}
   end
 
   def handle_call(:get_state, _from, worker_state) do
-    {:reply, :get_state, worker_state}
+    {:reply, worker_state, worker_state}
   end
 
   ####
@@ -53,7 +53,8 @@ defmodule Fawlty.UserHandler do
   ####
   # Initialization
 
-  defp handle_init do
-    worker_state(oauth: :all)
+  defp handle_init(email, token) do
+    user = Fawlty.User.find_by_email(email)
+    worker_state(user: user, oauth: token)
   end
 end
