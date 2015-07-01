@@ -22,6 +22,9 @@ defmodule Fawlty.View do
   end
 
   def debug(conn) do
-    "#{inspect Fawlty.Devise.get_session(conn)}"
+    [
+      "current pid: #{inspect Fawlty.Devise.get_session(conn)}",
+      "children: #{inspect :supervisor.which_children(Fawlty.UserSupervisor)}"
+    ]
   end
 end

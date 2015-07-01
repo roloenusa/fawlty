@@ -122,7 +122,9 @@
   <div class="container">
     <hr />
     <h4>Debug</h2>
-    <%= debug(@conn) %>
+    <%= for msg <- debug(@conn) do %>
+      <%= msg %> <br>
+    <%= end %>
   </div>
   <% end %>
 

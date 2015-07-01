@@ -4,7 +4,7 @@ defmodule Fawlty.Devise do
 
   """
 
-  defstruct id: nil, token: nil, provider: nil
+  defstruct id: nil, token: nil, provider: nil, pid: nil
 
   alias Plug.Conn
   alias Fawlty.User
@@ -15,24 +15,29 @@ defmodule Fawlty.Devise do
   @doc """
   Log on using an oauth2 connection.
   """
-  def oauth2_signin(conn, params) do
-    Oauth2Lib.get_oauth_token(conn, params)
-      |> handle_oauth2_signin
+  def oauth2_signin(conn, %{"code" => code} = params) do
+    Fawlty.UserSupervisor.get_user(code)
+      |> handle_oauth2_signin(conn)
   end
 
   @doc """
   Remove the session for the user.
   """
   def sign_out(conn) do
-    conn
-      |> Conn.delete_session(@session_key)
+    get_session(conn)
+      |> Fawlty.UserHandler.logout
+    Conn.delete_session(conn, @session_key)
   end
 
   @doc """
   Get the session user.
   """
   def get_session(conn) do
-    Conn.get_session(conn, @session_key)
+    pid = Conn.get_session(conn, @session_key)
+    case is_pid(pid) and :erlang.is_process_alive(pid) do
+      true -> pid
+         _ -> nil
+    end
   end
 
   defp get_or_create_user(%User{email: email} = user) do
@@ -42,36 +47,23 @@ defmodule Fawlty.Devise do
     end
   end
 
-  defp handle_oauth2_signin({:error, conn} = error), do: error
-  defp handle_oauth2_signin({:ok, conn, token, user_info}) do
-    %{"email" => email, "name" => name} = user_info
-    user = %Fawlty.User{name: name, email: email, encrypted_password: generate_password}
-             |> get_or_create_user
-
-    conn = create_session(conn, user.id, token)
+  defp handle_oauth2_signin({:error, _}, conn), do: {:error, conn}
+  defp handle_oauth2_signin({:ok, pid}, conn) do
+    conn = create_session(conn, pid)
     {:ok, conn}
   end
 
-  defp create_session(conn, id, token) do
-    conn
-      |> Conn.put_session(@session_key, %Fawlty.Devise{id: id, token: token})
+  defp create_session(conn, pid) do
+    Conn.put_session(conn, @session_key, pid)
   end
 
-
-  defp do_check_session(conn, %Fawlty.Devise{id: nil}), do: {:error, conn}
-  defp do_check_session(conn, %Fawlty.Devise{id: id, token: nil}), do: {:ok, conn}
-  defp do_check_session(conn, %Fawlty.Devise{id: id, token: token}) do
-    case Oauth2Lib.check_valid_token(token) do
-      {:ok, ^token} ->
-        {:ok, conn}
-      {:ok, provider} ->
-        conn = create_session(conn, id, token)
-        {:ok, conn}
-      error ->
-        {:error, conn}
+  defp do_check_session(conn, pid) when is_pid(pid) do
+    case Fawlty.UserHandler.authenticated?(pid) do
+      {:ok, _} -> {:ok, conn}
+      {:error, _} -> {:ok, conn}
     end
   end
-  defp do_check_session(conn, d), do: {:error, conn}
+  defp do_check_session(conn, _), do: {:error, conn}
 
   ####
   # Authentication
@@ -80,13 +72,13 @@ defmodule Fawlty.Devise do
   Check the session. Verify the user is authenticated.
   """
   def authenticated?(conn) do
-    session = get_session(conn)
-    do_check_session(conn, session)
+    pid = get_session(conn)
+    do_check_session(conn, pid)
   end
 
   def signed_user(conn) do
-    %Fawlty.Devise{id: id} = get_session(conn)
-    User.get(id)
+    pid = get_session(conn)
+    Fawlty.UserHandler.get_user(pid)
   end
 
   ####

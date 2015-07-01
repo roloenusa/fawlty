@@ -1,5 +1,6 @@
 defmodule Fawlty.UserHandler do
   require Record
+  require Logger
 
   @moduledoc """
   A genserver to schedule a player into a pvp pool once the shield runs out. The process maintains on a node per node
@@ -25,25 +26,64 @@ defmodule Fawlty.UserHandler do
     :gen_server.start_link(__MODULE__, args, [])
   end
 
-  @doc """
-  Add a player to the pvp_pool job_list
-  """
-  @spec get_state(pid) :: :ok
+  #####
+  # Interface
+  #####
+
   def get_state(pid) do
     :gen_server.call(pid, :get_state)
+  end
+
+  def authenticated?(pid) do
+    :gen_server.call(pid, :check_token)
+  end
+
+  def sign_in(pid, code) do
+    :gen_server.call(pid, {:sign_in, code})
+  end
+
+  def logout(pid) do
+    :gen_server.cast(pid, :logout)
+  end
+
+  def get_user(pid) do
+    :gen_server.call(pid, :get_user)
   end
 
   #####
   # GenServer Implementation
   #####
 
-  def init({email, token}) do
-    worker_state = handle_init(email, token)
-    {:ok, worker_state}
+  def init({code}) do
+    Fawlty.Oauth2Lib.get_oauth_token(code)
+    |> do_sign_in(worker_state)
   end
 
   def handle_call(:get_state, _from, worker_state) do
     {:reply, worker_state, worker_state}
+  end
+
+  def handle_call(:check_token, _from, worker_state(oauth: nil) = worker_state) do
+    {:reply, {:error, :no_user_found}, worker_state}
+  end
+  def handle_call(:check_token, _from, worker_state(oauth: token) = worker_state ) do
+    response = Fawlty.Oauth2Lib.check_valid_token(token)
+    {:reply, response, worker_state}
+  end
+
+  def handle_call({:sign_in, code}, _from, worker_state ) do
+    {res, worker_state} = Fawlty.Oauth2Lib.get_oauth_token(code)
+      |> do_sign_in(worker_state)
+
+    {:reply, res, worker_state}
+  end
+
+  def handle_call(:get_user, _from, worker_state(user: user) = worker_state ) do
+    {:reply, user, worker_state}
+  end
+
+  def handle_Cast(:logout, worker_state ) do
+    {:stop, :logout, worker_state}
   end
 
   ####
@@ -56,5 +96,15 @@ defmodule Fawlty.UserHandler do
   defp handle_init(email, token) do
     user = Fawlty.User.find_by_email(email)
     worker_state(user: user, oauth: token)
+  end
+
+  defp do_sign_in({:ok, token, body}, worker_state) do
+    %{"email" => email, "name" => name} = body
+    user = Fawlty.User.find_by_email(email)
+    worker_state = worker_state(worker_state, oauth: token, user: user)
+    {:ok, worker_state}
+  end
+  defp do_sign_in({:error, _}, worker_state) do
+    {:stop, :invalid}
   end
 end

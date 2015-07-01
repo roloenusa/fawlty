@@ -30,15 +30,14 @@ defmodule Fawlty.Oauth2Lib do
   @doc """
   Verify the user has access to the server based on their token information
   """
-  @spec get_oauth_token(conn, info) :: {:ok, conn} | {:error, conn}
-  def get_oauth_token(conn, %{"code" => code}) do
-
+  @spec get_oauth_token(info) :: {:ok, token, term} | {:error, :invalid}
+  def get_oauth_token(code) do
     try do
       token = OAuth2Ex.get_token(config, code)
       %HTTPoison.Response{body: body} = response = OAuth2Ex.HTTP.get(token, google_url(:email_url))
-      {:ok, conn, token, body}
+      {:ok, token, body}
     rescue
-      OAuth2Ex.Error -> {:error, conn}
+      OAuth2Ex.Error -> {:error, :invalid}
     end
   end
 

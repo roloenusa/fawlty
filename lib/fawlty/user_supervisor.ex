@@ -19,7 +19,7 @@ defmodule Fawlty.UserSupervisor do
     supervise(children, strategy: :simple_one_for_one)
   end
 
-  def get_handler(email, token) do
-    :supervisor.start_child(__MODULE__, [{email, token}])
+  def get_user(code) do
+    :supervisor.start_child(__MODULE__, [{code}])
   end
 end
