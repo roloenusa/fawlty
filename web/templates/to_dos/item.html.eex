@@ -3,8 +3,8 @@
 
     <div class="col-md-6">
       <label>
-        <input type='checkbox' id='{{item.id}}' class='item-done' />
-        <span class='item-description'>{{item.description}}</span>
+        <input type='checkbox' id='{{item.id}}' class='item-done' ng-click="itemDone(item)" ng-checked="item.done"/>
+        <span class='item-description'>{{item.id}} {{item.description}}</span>
         <span class='edit-item-description hidden'><input type='text' /></span>
       </label>
     </div>

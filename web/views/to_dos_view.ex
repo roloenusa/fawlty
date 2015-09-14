@@ -1,7 +1,13 @@
 defmodule Fawlty.ToDosView do
   use Fawlty.View
+  import Logger
 
-  def render("items.json", %{items: item}) do
-    item
+  @apis [
+    "items.json",
+    "toggle.json"
+  ]
+
+  def render(api, %{response: response}) when api in @apis do
+    response
   end
 end

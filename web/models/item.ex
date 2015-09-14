@@ -27,7 +27,7 @@ defmodule Item do
   def update(item_id, params) do
     item = get(item_id)
              |> Map.merge(params)
-             
+
     res = Repo.update(item)
     after_item_save({res, item})
     item
@@ -59,6 +59,14 @@ defmodule Item do
   @spec get(pos_integer) :: Item | nil
   def get(item_id) do
     Repo.get(Item, item_id)
+  end
+
+  @doc """
+  Find all items that have not been completed.
+  """
+  def find_all do
+    Item
+    |> find_query
   end
 
   @doc """
@@ -144,6 +152,33 @@ defmodule Item do
   end
 end
 
+# def generate_complex_items() do
+#   tags = Tag
+#     |> Repo.all
+#     |> Enum.reduce(HashDict.new, fn(%Tag{id: id} = tag, acc) -> Dict.put(acc, id, tag) end)
+#
+#
+#   mapa = ItemTagMap
+#     |> Repo.all
+#
+#   maps = ItemTagMap
+#     |> Repo.all
+#     |> Enum.reduce(HashDict.new, fn(%ItemTagMap{item_id: id, tag_id: tid} = tag, acc) ->
+#          %Tag{word: word} = t = Dict.get(tags, tid)
+#          IO.puts inspect t
+#          Dict.update(acc, id, [word], fn(tail) -> [word|tail] end)
+#        end)
+#
+#   items = Item
+#     |> Repo.all
+#     |> Enum.reduce(HashDict.new, fn(%Item{id: id} = item, acc) ->
+#         Dict.put(acc, id, item)
+#        end)
+#
+#
+#
+#   [items: items, maps: maps, tags: tags, mapa: mapa]
+# end
 
 # @doc """
 # Find all items that have been marked as completed.

@@ -41,5 +41,7 @@ defmodule Fawlty.Router do
     pipe_through :api
 
     get "/items", ToDosController, :items
+    get "/toggle", ToDosController, :toggle
+    post "/toggle", ToDosController, :toggle
   end
 end
